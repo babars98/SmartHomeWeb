@@ -1,0 +1,38 @@
+﻿@page 
+@model HomeAutomationWeb.Pages.EditModel
+@{
+    ViewData["Title"] = "Edit Sensor Info";
+}
+
+<h5>Edit Sensor Info</h5>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="mb-3">
+                <label asp-for="_sensor.SensorName" class="form-label"></label>
+                <input asp-for="_sensor.SensorName" class="form-control" />
+                <span asp-validation-for="_sensor.SensorName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="_sensor.StartTime" class="form-label"></label>
+                <input asp-for="_sensor.StartTime" type="time" class="form-control" />
+                <span asp-validation-for="_sensor.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_sensor.EndTime" class="form-label"></label>
+                <input asp-for="_sensor.EndTime" type="time" class="form-control" />
+                <span asp-validation-for="_sensor.EndTime" class="text-danger"></span>
+            </div>
+            <input asp-for="_sensor.SensorGUID" type="hidden" />
+            <br />
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

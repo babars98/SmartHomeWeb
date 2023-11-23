@@ -1,0 +1,53 @@
+﻿@page
+@model IndexModel
+@using HomeAutomationWeb.Models;
+@{
+    ViewData["Title"] = "Home page";
+    var sensorList = (List<Sensor>)ViewData["SensorsList"];
+}
+
+<a asp-page="/AddSensor" class="btn btn-primary">Add Sensor</a>
+
+<br />
+<br />
+<table class="table table-striped">
+    <thead class="">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Sensor</th>
+            <th scope="col">Unique ID</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (sensorList.Count < 1)
+        {
+            <tr>
+                <td colspan="5" class="text-md-center">
+                    No Sensors to show.
+                </td>
+                
+            </tr>
+        }
+        else
+        {
+            int count = 1;
+            foreach(var sensor in sensorList)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@sensor.SensorName</td>
+                    <td>@sensor.SensorGUID</td>
+                    <td>@sensor.StartTime</td>
+                    <td>@sensor.EndTime</td>
+                    <td>
+                        <a asp-page="Edit" asp-route-sensorId="@sensor.SensorGUID">Edit</a>
+                    </td>
+                </tr>
+                count++;
+            }
+        }
+    </tbody>
+</table>
