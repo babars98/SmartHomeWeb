@@ -99,20 +99,24 @@ namespace HomeAutomationWeb.DAL
             return _dbConnect.ExecuteWriteQuery(query, param);
         }
 
-        public bool CheckSensorSchedule(string sensorId, string time)
+        public (string, string) GetSensorSchedule(string sensorId, string time)
         {
             try
             {
                 var parsedtime = Utility.Convert12Hrto24HrFormat(TimeOnly.Parse(time));
-                string query = string.Format("SELECT 1 FROM dbo.Sensor WHERE SensorGUID = '{0}' AND '{1}' BETWEEN StartTime AND EndTime", sensorId, parsedtime);
+                string query = string.Format("SELECT StartTime, EndTime FROM dbo.Sensor WHERE SensorGUID = '{0}'", sensorId);
 
                 var datatable = _dbConnect.ExecuteReadQuery(query);
 
-                return datatable.Rows.Count > 0;
-            }
-            catch(Exception ex) { }
+                DataRow row = datatable.Rows[0];
+                var startTime = row["StartTime"].ToString();
+                var endTime = row["EndTime"].ToString();
 
-            return false; 
+                return (startTime, endTime);
+            }
+            catch (Exception ex) { }
+
+            return (TimeOnly.MinValue.ToString(), TimeOnly.MinValue.ToString());
         }
     }
 }
