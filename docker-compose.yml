@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  homeautomationweb:
+    image: ${DOCKER_REGISTRY-}homeautomationweb
+    build:
+      context: .
+      dockerfile: HomeAutomationWeb\Dockerfile
+    ports:
+    - 5200:80
+    - 5201:443
