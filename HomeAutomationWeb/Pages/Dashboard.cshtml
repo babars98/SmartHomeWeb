@@ -1,0 +1,72 @@
+﻿@page
+@model HomeAutomationWeb.Pages.DashboardModel
+@using HomeAutomationWeb.Models
+@{
+    ViewData["Title"] = "Dashboard";
+    var tempdata = (List<SensorData>)ViewData["TempData"];
+}
+
+<h2>Temprature Data</h2>
+
+<h6 id="nodata" class="align-items-center"></h6>
+
+<canvas id="chart" style="width:100%"></canvas>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            debugger
+            var model = '@Html.Raw(Json.Serialize(tempdata))';
+            var data = JSON.parse(model);
+            console.log(data);
+
+            if(data == null || data.length <= 0){
+                $('#nodata').text("No data availabe to show");
+                return;
+            }
+            
+
+            var tmp = [];
+            var time = [];
+
+            for (let i = 0; i < data.length; i++) {
+                tmp.push(data[i].data)
+                time.push(data[i].time.substring(0, 5))
+            }
+
+            new Chart("chart", {
+                type: "line",
+                data: {
+                    labels: time,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: tmp
+                    }]
+                },
+                options: {
+                    legend: { display: false },
+                    scales: {
+                        yAxes: [{
+                            ticks: { min: 0, max: 40 }, 
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Temprature'
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time'
+                            }
+                        }],
+                    }
+                }
+            });
+
+        })
+    </script>
+}

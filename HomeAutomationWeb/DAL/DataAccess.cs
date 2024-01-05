@@ -2,6 +2,7 @@
 using HomeAutomationWeb.Models;
 using System.Data;
 using System.Dynamic;
+using System.Text;
 
 namespace HomeAutomationWeb.DAL
 {
@@ -104,7 +105,7 @@ namespace HomeAutomationWeb.DAL
             try
             {
                 var parsedtime = Utility.Convert12Hrto24HrFormat(TimeOnly.Parse(time));
-                string query = string.Format("SELECT StartTime, EndTime FROM dbo.Sensor WHERE SensorGUID = '{0}'", sensorId);
+                string query = string.Format("SELECT SensorId,Name,StartTime, EndTime FROM dbo.Sensor WHERE SensorGUID = '{0}'", sensorId);
 
                 var datatable = _dbConnect.ExecuteReadQuery(query);
 
@@ -117,6 +118,49 @@ namespace HomeAutomationWeb.DAL
             catch (Exception ex) { }
 
             return (TimeOnly.MinValue.ToString(), TimeOnly.MinValue.ToString());
+        }
+
+        public List<SensorData> GetSensorData(string SensorGuid)
+        {
+            string query = string.Format("SELECT TOP 20 Time,Data FROM dbo.[SensorData] ORDER BY DateCreated DESC");
+
+            var datatable = _dbConnect.ExecuteReadQuery(query);
+
+            var list = new List<SensorData>();
+
+            if (datatable.Rows.Count < 1)
+                return list;
+
+            foreach (DataRow row in datatable.Rows)
+            {
+                list.Add(new SensorData()
+                {
+                    Time = row["Time"].ToString(),
+                    Data = Convert.ToDouble(row["Data"])
+                });
+            }
+
+            return list;
+        }
+
+        public bool SaveSensorData(string sensorId, double data, string time)
+        {
+            var sensor = GetSensorInfo(sensorId);
+
+            if (!sensor.SensorName.Contains("Temperature", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            string query = "INSERT INTO dbo.[SensorData] (SensorId,Data,Time,DateCreated) VALUES (@sensorId,@data,@time,@datecreated)";
+
+            var param = new Dictionary<string, object>()
+            {
+                { "@sensorId", sensor.SensorId},
+                { "@data", data},
+                { "@time", Utility.Convert12Hrto24HrFormat(TimeOnly.Parse(time))},
+                { "@datecreated", DateTime.Now }
+            };
+
+            return _dbConnect.ExecuteWriteQuery(query, param);
         }
     }
 }
