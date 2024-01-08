@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/HomeAutomationWeb/Pages/Edit.cshtml.cs
+/HomeAutomationWeb/rest.csv
+/HomeAutomationWeb/SensorFile.csv
+/HomeAutomationWeb/aws-beanstalk-tools-defaults.json
