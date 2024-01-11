@@ -16,7 +16,7 @@ namespace HomeAutomationWeb.Pages
 
         public void OnGet()
         {
-            var dataAccess = new DataAccess();
+            var dataAccess = new CSVfileHandler();
 
             ViewData["SensorsList"] = dataAccess.GetAllSensors();
         }

@@ -9,7 +9,7 @@ namespace HomeAutomationWeb.Pages
     {
         public void OnGet()
         {
-            var data = new DataAccess().GetSensorData(null).OrderBy(c => c.Time).ToList();
+            var data = new CSVfileHandler().GetSensorData(null).OrderBy(c => c.Time).ToList();
             ViewData["TempData"] = data;
         }
     }

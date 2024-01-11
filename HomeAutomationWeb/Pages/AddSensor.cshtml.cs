@@ -17,7 +17,7 @@ namespace HomeAutomationWeb.Pages
 
         public IActionResult OnPost()
         {
-            var dataAccess = new DataAccess();
+            var dataAccess = new CSVfileHandler();
             if (ModelState.IsValid)
             {
                 var result = dataAccess.AddSensor(_sensor);

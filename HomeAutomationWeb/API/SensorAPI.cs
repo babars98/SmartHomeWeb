@@ -9,16 +9,21 @@ namespace HomeAutomationWeb.API
             app.MapGet("/api/CheckSchedule/{sensorId}/{time}/{data}",
                 (string sensorId, string time, double data) =>
                 {
-                    var result = new DataAccess().GetSensorSchedule(sensorId, time);
+                    var result = new CSVfileHandler().GetSensorSchedule(sensorId);
                     bool res = IsTimeBetweenStartandEnd(time, result.Item1, result.Item2);
                     Task.Run(() => SaveSensorData(sensorId, data, time));
                     return Results.Ok(res);
                 });
+
+            app.MapGet("/api/Test", () => 
+            {
+                return "Helo World";
+            });
         }
 
         private static async Task SaveSensorData(string sensorId, double data, string time)
         {
-            var result = new DataAccess().SaveSensorData(sensorId, data, time);
+            var result = new CSVfileHandler().SaveSensorData(sensorId, data, time);
         }
 
         private static bool IsTimeBetweenStartandEnd(string currentTime, string startTime, string endTime)
